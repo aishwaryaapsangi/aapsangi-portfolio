@@ -11,3 +11,7 @@
   --green-bright: #64ffda;
   --green-tint: rgba(100, 255, 218, 0.1);
 }
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";

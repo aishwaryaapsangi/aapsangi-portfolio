@@ -13,7 +13,7 @@ class NavBar extends React.Component {
     return (
       <Navbar fixed="top" className="bg-body-tertiary">
         <Container>
-          <Navbar.Brand href="#">Gazi Jarin</Navbar.Brand>
+          <Navbar.Brand href="#">Aishwarya Apsangi</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
