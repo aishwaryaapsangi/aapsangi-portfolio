@@ -47,6 +47,9 @@
 
 .about-image {
   padding-left: 40px;
+  position: relative;
+  width: 320px;
+  min-width: 320px;
 }
 
 .about-image img {
