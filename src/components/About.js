@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/About.css";
 import FadeInSection from "./FadeInSection";
+import FlyingPosters from './FlyingPosters'
 
 class About extends React.Component {
   constructor() {
@@ -45,6 +46,11 @@ class About extends React.Component {
       "C#",
     ];
 
+    const items = [
+    'https://picsum.photos/500/500?grayscale', 
+    'https://picsum.photos/600/600?grayscale', 
+    'https://picsum.photos/400/400?grayscale'
+  ];
     return (
       <div id="about">
         <FadeInSection>
@@ -66,8 +72,16 @@ class About extends React.Component {
               </ul>
               {[two]}
             </div>
-            <div className="about-image">
-              <img alt="Gazi Jarin" src={"/assets/me2.jpg"} />
+            <div className="about-image" style={{ paddingLeft: '10%', width: '80%', height: '380px', position: 'relative' }}>
+              <FlyingPosters
+                items={items}
+                planeWidth={320}
+                planeHeight={320}
+                distortion={3}
+                scrollEase={0.01}
+                cameraFov={45}
+                cameraZ={20}
+              />
             </div>
           </div>
         </FadeInSection>

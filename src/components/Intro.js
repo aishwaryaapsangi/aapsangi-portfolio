@@ -5,7 +5,7 @@ import Typist from "react-typist";
 import "react-typist/dist/Typist.css";
 import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
 import FadeInSection from "./FadeInSection";
-import PixelTransition from "./PixelTransition";
+import ParticlePortrait from "./ParticlePortrait";
 
 class Intro extends React.Component {
   constructor() {
@@ -26,33 +26,7 @@ class Intro extends React.Component {
     return (
       <div id="intro">
         <div className="intro-simulation">
-          <PixelTransition
-          firstContent={
-            <img
-              src="./profile.png"
-              alt="profile pic!"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          }
-          secondContent={
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "grid",
-                placeItems: "center",
-                backgroundColor: "#111"
-              }}
-            >
-              <p style={{ fontWeight: 900, fontSize: "3rem", color: "#ffffff" }}>Meow!</p>
-            </div>
-          }
-          gridSize={8}
-          pixelColor="#ffffff"
-          once={false}
-          animationStepDuration={0.4}
-          className="custom-pixel-card"
-        />
+          <ParticlePortrait />
         </div>
         <div className="intro-block">
           <Typist avgTypingDelay={120}>
@@ -69,7 +43,7 @@ class Intro extends React.Component {
               major feature launches in industry-leading services as well as
               apps that have 100M+ installs.
             </div>
-            <a href="mailto:aishwaryaapsangi25@gmail.com" className="intro-contact">
+            <a href="mailto:aishwaryaapsangi25@gmail.com" className="intro-contact interactive">
               <EmailRoundedIcon></EmailRoundedIcon>
               {" Say hi!"}
             </a>
