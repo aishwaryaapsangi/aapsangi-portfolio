@@ -1,5 +1,5 @@
 import React from "react";
-
+import Button from "./Button";
 import "../styles/Intro.css";
 import Typist from "react-typist";
 import "react-typist/dist/Typist.css";
@@ -29,6 +29,15 @@ class Intro extends React.Component {
           <ParticlePortrait />
         </div>
         <div className="intro-block">
+            <div className="inline-flex mb-4 items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-3 py-1">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            <span className="font-mono text-xs text-[var(--slate)]">
+              Available for freelance work
+            </span>
+          </div>
           <Typist avgTypingDelay={120}>
             <span className="intro-title">
               {"hi, "}
@@ -43,10 +52,11 @@ class Intro extends React.Component {
               major feature launches in industry-leading services as well as
               apps that have 100M+ installs.
             </div>
-            <a href="mailto:aishwaryaapsangi25@gmail.com" className="intro-contact interactive">
-              <EmailRoundedIcon></EmailRoundedIcon>
-              {" Say hi!"}
-            </a>
+            <div className="staggered-reveal pt-4">
+              <Button href="mailto:aishwaryaapsangi25@gmail.com" classes="link" type="primary">
+                Let&apos;s Talk
+              </Button>
+            </div>
           </FadeInSection>
         </div>
       </div>

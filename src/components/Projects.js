@@ -111,7 +111,7 @@ class Projects extends React.Component {
         </div>
         <Carousel>
           {Object.keys(spotlightProjects).map((key, i) => (
-            <Carousel.Item>
+            <Carousel.Item key={key}>
               <img
                 className="d-block w-100"
                 src={spotlightProjects[key]["image"]}
@@ -120,12 +120,12 @@ class Projects extends React.Component {
               <div className="caption-bg">
                 <Carousel.Caption>
                   <h3>{spotlightProjects[key]["title"]}</h3>
-                  <p>
+                  <div className="project-description">
                     {spotlightProjects[key]["desc"]}
                     <p className="techStack">
                       {spotlightProjects[key]["techStack"]}
                     </p>
-                  </p>
+                </div>  
                   <ExternalLinks
                     githubLink={spotlightProjects[key]["link"]}
                     openLink={spotlightProjects[key]["open"]}
@@ -138,7 +138,7 @@ class Projects extends React.Component {
         <div className="project-container">
           <ul className="projects-grid">
             {Object.keys(projects).map((key, i) => (
-              <FadeInSection delay={`${i + 1}00ms`}>
+              <FadeInSection key={key} delay={`${i + 1}00ms`}>
                 <li className="projects-card">
                   <div className="card-header">
                     <div className="folder-icon">

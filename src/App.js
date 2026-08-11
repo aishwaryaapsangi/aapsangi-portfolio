@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Intro from "./components/Intro";
 import Experience from "./components/Experience";
 import About from "./components/About";
@@ -14,12 +14,26 @@ import Loader from './components/Loader';
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 767);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 767);
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
+
+    
   if (loading) {
     return <Loader onComplete={() => setLoading(false)} />;
   }
   return (
     <div className="App">
-      <Cursor />
+      <Cursor isDesktop={isDesktop} />
       <div className="background-wrap">
         <PixelBlast
           variant="circle"
