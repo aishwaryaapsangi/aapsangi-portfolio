@@ -1,6 +1,6 @@
 :root {
   --dark-navy: #020c1b;
-  --medium-navy: #100917;
+  --medium-navy: #22182c;
   --light-navy: #112240;
   --lightest-navy: #233554;
   --navy-shadow: rgba(2, 12, 27, 0.7);
@@ -11,7 +11,3 @@
   --green-bright: #64ffda;
   --green-tint: rgba(100, 255, 218, 0.1);
 }
-
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
