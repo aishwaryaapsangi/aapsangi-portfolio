@@ -11,7 +11,11 @@ import "rsuite/dist/styles/rsuite-default.css";
 import PixelBlast from './components/PixelBlast';
 import Cursor from './components/Cursor';
 import Loader from './components/Loader';
-
+import Rail from "./components/Rail";
+import Marquee from "./components/Marquee";
+import JobList from "./components/JobList";
+import BugHunt from "./components/BugHunt";
+import StatusBar from "./components/StatusBar";
 function App() {
   const [loading, setLoading] = useState(true);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 767);
@@ -34,6 +38,7 @@ function App() {
   return (
     <div className="App">
       <Cursor isDesktop={isDesktop} />
+      <Rail />
       <div className="background-wrap">
         <PixelBlast
           variant="circle"
@@ -58,10 +63,13 @@ function App() {
       <NavBar></NavBar>
       <div id="content">
         <Intro></Intro>
+        <Marquee />
         <About></About>
-        <Experience></Experience>
+        <JobList></JobList>
         <Projects></Projects>
+        <BugHunt />
         <Credits></Credits>
+        <StatusBar />
       </div>
     </div>
   );

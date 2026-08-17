@@ -1,49 +1,51 @@
-import React from "react";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import BorderColorIcon from "@material-ui/icons/BorderColor";
-import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
-import LinkedInIcon from "@material-ui/icons/LinkedIn";
-import GitHubIcon from "@material-ui/icons/GitHub";
-import "../styles/NavBar.css";
+import React, { useEffect, useState } from "react";
 
-class NavBar extends React.Component {
-  render() {
-    return (
-      <Navbar fixed="top" className="bg-body-tertiary">
-        <Container>
-          <Navbar.Brand href="#">Aishwarya Apsangi</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#intro">Home</Nav.Link>
-              <Nav.Link href="#about">About</Nav.Link>
-              <Nav.Link href="#experience">Experience</Nav.Link>
-              <Nav.Link href="#projects">Projects</Nav.Link>
-            </Nav>
-            <Nav className="ml-auto">
-              <Nav.Link href="mailto:gazijarin@gmail.com">
-                <EmailRoundedIcon style={{ fontSize: 20 }}></EmailRoundedIcon>
-              </Nav.Link>
-              <Nav.Link href="https://github.com/gazijarin" target="_blank">
-                <GitHubIcon style={{ fontSize: 19 }}></GitHubIcon>
-              </Nav.Link>
-              <Nav.Link
-                href="https://www.linkedin.com/in/gazi-jarin-3644b0172/"
-                target="_blank"
+
+const links = [
+  { label: "about", href: "#about" },
+  { label: "work", href: "#work" },
+  { label: "projects", href: "#projects" },
+  { label: "play", href: "#play" },
+];
+
+const NavBar = () => (
+   <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
+    <div className="flex w-full max-w-[1240px] items-center justify-between rounded-full border border-border bg-background/75 px-5 py-2.5 backdrop-blur-md">
+      
+      <a
+        href="#top"
+        className="font-mono text-sm text-foreground translate-y-[3px]"
+      >
+        ash<span className="text-primary">.</span>apsangi
+      </a>
+
+      <nav className="translate-y-[10px]">
+        <ul className="flex items-center gap-4 sm:gap-6">
+          {links.map((l) => (
+            <li key={l.label}>
+              <a
+                href={l.href}
+                className="link-underline font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
-                <LinkedInIcon style={{ fontSize: 21 }}></LinkedInIcon>
-              </Nav.Link>
-              <Nav.Link href="https://medium.com/@gazijarin.ai" target="_blank">
-                <BorderColorIcon style={{ fontSize: 20 }}></BorderColorIcon>
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    );
-  }
-}
+                {l.label}
+              </a>
+            </li>
+          ))}
+
+          <li>
+            <a
+              href="#contact"
+              className="btn-outline !py-1.5 !text-[11px]"
+            >
+              say hi
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+);
 
 export default NavBar;
+
