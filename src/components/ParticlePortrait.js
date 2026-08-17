@@ -1,145 +1,125 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const ParticlePortrait = () => {
+const ParticlePortrait = ({ src = "/ash-bg.png" }) => {
   const canvasRef = useRef(null);
   const mouseRef = useRef({ x: -1000, y: -1000, active: false });
   const linesRef = useRef([]);
   const imageLoadedRef = useRef(false);
-  const startTimeRef = useRef(null);
-  const [size, setSize] = useState(500);
+  const startTimeRef = useRef(0);
+  const [size, setSize] = useState(420);
 
   useEffect(() => {
     const updateSize = () => {
       const width = window.innerWidth;
 
       if (width <= 480) {
-        setSize(Math.min(220, width - 40));
+        setSize(Math.min(240, width - 48));
       } else if (width <= 768) {
-        setSize(Math.min(280, width - 60));
+        setSize(Math.min(300, width - 64));
       } else {
-        setSize(400);
+        setSize(420);
       }
     };
 
     updateSize();
     window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
+
+    return () => {
+      window.removeEventListener("resize", updateSize);
+    };
   }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
-    const canvasWidth = size;
-    const canvasHeight = size;
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
 
-    let animationId;
+    if (!ctx) return;
+
+    const w = size;
+    const h = size;
+
+    canvas.width = w;
+    canvas.height = h;
+
+    let animationId = 0;
 
     const img = new Image();
     img.crossOrigin = "Anonymous";
-    img.src = "/ash-bg.png";
+    img.src = src;
 
     img.onload = () => {
       const offscreen = document.createElement("canvas");
       const offCtx = offscreen.getContext("2d");
-      offscreen.width = canvasWidth;
-      offscreen.height = canvasHeight;
 
-      const scale = 0.92;
+      if (!offCtx) return;
+
+      offscreen.width = w;
+      offscreen.height = h;
+
+      const scale = 0.94;
       const imgAspect = img.width / img.height;
 
-      let drawHeight = canvasHeight * scale;
+      let drawHeight = h * scale;
       let drawWidth = drawHeight * imgAspect;
 
-      if (drawWidth > canvasWidth * scale) {
-        drawWidth = canvasWidth * scale;
+      if (drawWidth > w * scale) {
+        drawWidth = w * scale;
         drawHeight = drawWidth / imgAspect;
       }
 
-      const offsetX = (canvasWidth - drawWidth) / 2;
-      const offsetY = (canvasHeight - drawHeight) / 2;
-
       offCtx.drawImage(
         img,
-        offsetX,
-        offsetY,
+        (w - drawWidth) / 2,
+        (h - drawHeight) / 2,
         drawWidth,
         drawHeight
       );
 
-      const imageData = offCtx.getImageData(
-        0,
-        0,
-        canvasWidth,
-        canvasHeight
-      );
+      const pixels = offCtx.getImageData(0, 0, w, h).data;
 
-      const pixels = imageData.data;
+      const lines = [];
+      const gap = 4;
 
-     const lines = [];
+      for (let y = 0; y < h; y += gap) {
+        for (let x = 0; x < w; x += gap) {
+          const i = (y * w + x) * 4;
 
-const rowGap = size <= 280 ? 4 : 4;
-const columnGap = size <= 280 ? 4 : 4;
+          const r = pixels[i] ?? 0;
+          const g = pixels[i + 1] ?? 0;
+          const b = pixels[i + 2] ?? 0;
+          const a = pixels[i + 3] ?? 0;
 
-for (let y = 0; y < canvasHeight; y += rowGap) {
-  for (let x = 0; x < canvasWidth; x += columnGap) {
-    const i = (y * canvasWidth + x) * 4;
+          if (a < 80) continue;
 
-    const r = pixels[i];
-    const g = pixels[i + 1];
-    const b = pixels[i + 2];
-    const a = pixels[i + 3];
+          const brightness =
+            (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 
-    // Ignore transparent background
-    if (a < 80) continue;
+          const contrast = Math.pow(brightness, 1.7);
 
-    // Perceived brightness
-    const brightness =
-      (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+          const lineLength = Math.max(
+            1,
+            Math.floor(1 + contrast * 4)
+          );
 
-    // Increase contrast between dark and light areas
-    const contrast = Math.pow(brightness, 0.65);
+          const scatter = size <= 300 ? 35 : 60;
 
-    // Bright areas get longer dashes
-    // Dark areas get shorter dashes
-    const lineLength = Math.max(
-      2,
-      Math.floor(2 + contrast * 9)
-    );
-
-    // Keep the initial movement subtle
-    const scatterAmount = size <= 280 ? 35 : 55;
-
-    const scatterX =
-      (Math.random() - 0.5) * scatterAmount;
-
-    const scatterY =
-      (Math.random() - 0.5) * scatterAmount;
-
-    lines.push({
-      x: x + scatterX,
-      y: y + scatterY,
-
-      targetX: x,
-      targetY: y,
-
-      vx: 0,
-      vy: 0,
-
-      length: lineLength,
-
-      // More visible overall
-      baseAlpha: 0.45 + contrast * 0.55,
-
-      currentAlpha: 0,
-
-      delay: Math.random() * 0.25,
-    });
-  }
-}
+          lines.push({
+            x: x + (Math.random() - 0.5) * scatter,
+            y: y + (Math.random() - 0.5) * scatter,
+            targetX: x,
+            targetY: y,
+            vx: 0,
+            vy: 0,
+            length: lineLength,
+            baseAlpha: 0.12 + contrast * 0.78,
+            currentAlpha: 0,
+            delay: Math.random() * 0.25,
+          });
+        }
+      }
 
       linesRef.current = lines;
       imageLoadedRef.current = true;
@@ -149,74 +129,91 @@ for (let y = 0; y < canvasHeight; y += rowGap) {
     const draw = () => {
       animationId = requestAnimationFrame(draw);
 
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      ctx.clearRect(0, 0, w, h);
 
       if (!imageLoadedRef.current) return;
 
-      const lines = linesRef.current;
       const mouse = mouseRef.current;
-      const elapsed = (performance.now() - startTimeRef.current) / 1000;
 
-      lines.forEach((p) => {
-        const particleTime = elapsed - p.delay;
+      const elapsed =
+        (performance.now() - startTimeRef.current) / 1000;
 
-        if (particleTime < 0) return;
+      for (const p of linesRef.current) {
+        const t = elapsed - p.delay;
 
-        const fadeProgress = Math.min(particleTime / 1.5, 1);
-        const easedFade = 1 - Math.pow(1 - fadeProgress, 2);
-        p.currentAlpha = p.baseAlpha * easedFade;
+        if (t < 0) continue;
 
-        const moveProgress = Math.min(particleTime / 2.5, 1);
-        const easedMove = 1 - Math.pow(1 - moveProgress, 3);
+        const fade = Math.min(t / 1.5, 1);
+
+        p.currentAlpha =
+          p.baseAlpha * (1 - Math.pow(1 - fade, 2));
+
+        const moveProgress = Math.min(t / 2.5, 1);
+
+        const easedMove =
+          1 - Math.pow(1 - moveProgress, 3);
 
         if (mouse.active) {
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 60;
+          const mdx = p.x - mouse.x;
+          const mdy = p.y - mouse.y;
 
-          if (dist < maxDist && dist > 0) {
-            const force = (1 - dist / maxDist) * 2;
-            p.vx += (dx / dist) * force;
-            p.vy += (dy / dist) * force;
+          const dist = Math.sqrt(
+            mdx * mdx + mdy * mdy
+          );
+
+          if (dist < 60 && dist > 0) {
+            const force = (1 - dist / 60) * 2;
+
+            p.vx += (mdx / dist) * force;
+            p.vy += (mdy / dist) * force;
           }
         }
 
-        const dx = p.targetX - p.x;
-        const dy = p.targetY - p.y;
+        const pull = 0.012 + easedMove * 0.045;
 
-        const pullStrength = 0.012 + easedMove * 0.045;
-        p.vx += dx * pullStrength;
-        p.vy += dy * pullStrength;
+        p.vx += (p.targetX - p.x) * pull;
+        p.vy += (p.targetY - p.y) * pull;
 
-        p.vx *= 0.90;
-        p.vy *= 0.90;
+        p.vx *= 0.9;
+        p.vy *= 0.9;
 
         p.x += p.vx;
         p.y += p.vy;
 
         ctx.strokeStyle = `rgba(100, 255, 218, ${p.currentAlpha})`;
-        ctx.lineWidth = size <= 280 ? 1.2 : 1.5;
+
+        ctx.lineWidth = size <= 300 ? 1.2 : 1.5;
+
         ctx.beginPath();
+
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(p.x + p.length, p.y);
+
         ctx.stroke();
-      });
+      }
     };
 
     const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
-      mouseRef.current.active = true;
+
+      mouseRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        active: true,
+      };
     };
 
     const handleTouchMove = (e) => {
       const rect = canvas.getBoundingClientRect();
       const touch = e.touches[0];
-      mouseRef.current.x = touch.clientX - rect.left;
-      mouseRef.current.y = touch.clientY - rect.top;
-      mouseRef.current.active = true;
+
+      if (!touch) return;
+
+      mouseRef.current = {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top,
+        active: true,
+      };
     };
 
     const handleLeave = () => {
@@ -232,17 +229,18 @@ for (let y = 0; y < canvasHeight; y += rowGap) {
 
     return () => {
       cancelAnimationFrame(animationId);
+
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseleave", handleLeave);
       canvas.removeEventListener("touchmove", handleTouchMove);
       canvas.removeEventListener("touchend", handleLeave);
     };
-  }, [size]);
+  }, [size, src]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="simulation-container"
+      aria-hidden="true"
       style={{
         width: `${size}px`,
         height: `${size}px`,
